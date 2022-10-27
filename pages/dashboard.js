@@ -95,7 +95,6 @@ const dashboard = () => {
         );
         setMarketContract(deployedMarketContract);
 
-        console.log(account);
         //Fetch all unsold items
         const data = await deployedMarketContract.methods
           .getMyItemCreated()
@@ -105,8 +104,7 @@ const dashboard = () => {
             const nftUrl = await deployedNftContract.methods
               .tokenURI(item.tokenId)
               .call();
-            console.log(nftUrl);
-            console.log(item);
+
             const priceToWei = Web3.utils.fromWei(
               item.price.toString(),
               "ether"
@@ -117,7 +115,6 @@ const dashboard = () => {
             const replaceIPFsName = nftUrl
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
-            console.log("replaceIPFsName", replaceIPFsName);
             const metaData = await axios.get(replaceIPFsName);
 
             const oldImageUrl = metaData.data.image;
@@ -125,8 +122,6 @@ const dashboard = () => {
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
 
-            console.log("metaData.data.image", metaData.data.image);
-            console.log("metaData.data.image", replaceIPFsImageName);
             //TODO: fix this object
             let myItem = {
               price: priceToWei,
@@ -147,7 +142,7 @@ const dashboard = () => {
         setSoldItems(mySoldItems);
         setcreathedItems(items);
       } else {
-        window.alert("You are at Wrong Netweok, Connect with Roposten Please");
+        window.alert("You are at Wrong Netweok, Connect with Goerli Please");
       }
     };
     web3Api.web3 && LoadContracts();
@@ -160,15 +155,15 @@ const dashboard = () => {
           <HeadAlert>
             {{
               account: account,
-              createdNumber: `Good Job You Created ${creathedItems.length} NfT Items`,
-              title: "Number Of Created Items",
+              createdNumber: `You Created ${creathedItems.length} NFTs`,
+              title: "Number Of Created NFTs",
             }}
           </HeadAlert>
 
           {!creathedItems.length ? (
             <h1 className=" py-20 text-4xl tracking-tight font-extrabold text-yellow-500 sm:text-5xl md:text-6xl">
               <span className="block lg:py-3 xl:inline">
-                You Don`t Have Any Nft Item{" "}
+                You Don't Have Any NFTs{" "}
               </span>
             </h1>
           ) : (
@@ -230,15 +225,15 @@ const dashboard = () => {
         <div className="px-4 " style={{ maxWidth: "1600px" }}>
           <HeadAlert>
             {{
-              createdNumber: `Number of your NFt Items solded: ${soldItems.length} `,
-              title: "Number Of Sold Items",
+              createdNumber: `Number of your NFTs solded: ${soldItems.length} `,
+              title: "Number Of Sold NFTs",
             }}
           </HeadAlert>
 
           {!soldItems.length ? (
             <h1 className=" py-20 text-4xl tracking-tight font-extrabold text-yellow-500 sm:text-5xl md:text-6xl">
               <span className="block lg:py-3 xl:inline">
-                You Don`t Have Any Sold Item{" "}
+                You Don't Have Any Sold NFTs{" "}
               </span>
             </h1>
           ) : (

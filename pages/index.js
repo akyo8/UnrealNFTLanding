@@ -117,14 +117,11 @@ export default function Home() {
         const data = await deployedMarketContract.methods
           .getAllUnsoldItems()
           .call();
-        console.log(data);
         const items = await Promise.all(
           data.map(async (item) => {
             const nftUrl = await deployedNftContract.methods
               .tokenURI(item.tokenId)
               .call();
-            console.log(nftUrl);
-            console.log(item);
             const priceToWei = Web3.utils.fromWei(
               item.price.toString(),
               "ether"
@@ -135,7 +132,6 @@ export default function Home() {
             const replaceIPFsName = nftUrl
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
-            console.log("replaceIPFsName", replaceIPFsName);
             const metaData = await axios.get(replaceIPFsName);
 
             const oldImageUrl = metaData.data.image;
@@ -143,8 +139,6 @@ export default function Home() {
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
 
-            console.log("metaData.data.image", metaData.data.image);
-            console.log("metaData.data.image", replaceIPFsImageName);
             //TODO: fix this object
             let myItem = {
               price: priceToWei,
@@ -155,7 +149,6 @@ export default function Home() {
               name: metaData.data.name,
               description: metaData.data.description,
             };
-            console.log(item);
 
             return myItem;
           })
@@ -163,18 +156,13 @@ export default function Home() {
 
         setUnsoldItems(items);
       } else {
-        window.alert("You are at Wrong Netweok, Connect with Roposten Please");
+        window.alert("You are at Wrong Netweok, Connect with Goerli Please");
       }
     };
     web3Api.web3 && LoadContracts();
   }, [web3Api.web3]);
   //Create nft Buy Function
   const buyNFT = async (nftItem) => {
-    console.log("********");
-    console.log(account);
-    console.log(nftAddress);
-    console.log(marketContract);
-
     const priceToWei = Web3.utils.toWei(nftItem.price.toString(), "ether");
     const convertIdtoInt = Number(nftItem.itemId);
 
@@ -182,7 +170,6 @@ export default function Home() {
       .createMarketForSale(nftAddress, convertIdtoInt)
       .send({ from: account, value: priceToWei });
     router.reload();
-    console.log(result);
   };
 
   return (
@@ -192,9 +179,7 @@ export default function Home() {
       {unsoldItems.length < 5 ? (
         <>
           <h1 className=" py-20 text-4xl tracking-tight font-extrabold text-yellow-500 sm:text-5xl md:text-6xl">
-            <span className="block lg:py-3 xl:inline">
-              There is Less than 5 NFTs{" "}
-            </span>
+            <span className="block lg:py-3 xl:inline"> </span>
           </h1>
         </>
       ) : (
@@ -263,15 +248,10 @@ export default function Home() {
 
       <div className="flex justify-center">
         <div className="px-4 " style={{ maxWidth: "1600px" }}>
-          <h1 className=" px-10 text-xl tracking-tight font-extrabold text-yellow-500 sm:text-3xl md:text-4xl">
-            <span className="block lg:py-3 xl:inline">
-              Explore All Nfts Nad Buy
-            </span>
-          </h1>
           {!unsoldItems.length ? (
             <h1 className=" py-20 text-4xl tracking-tight font-extrabold text-yellow-500 sm:text-5xl md:text-6xl">
               <span className="block lg:py-3 xl:inline">
-                Explore the High Uinque Nfts Item{" "}
+                Explore the High Uinque Nfts{" "}
               </span>
             </h1>
           ) : (
@@ -302,7 +282,7 @@ export default function Home() {
                                 <div className="col-span-1 flex">
                                   <img
                                     className="flex justify-center w-15 lg:w-12"
-                                    src="./bnb.png"
+                                    src="https://img.icons8.com/fluency/48/000000/ethereum.png"
                                     alt="music icon"
                                   />
                                 </div>

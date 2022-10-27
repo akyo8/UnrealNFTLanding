@@ -78,14 +78,11 @@ const createNfts = () => {
   const onChange = async (e) => {
     //e.preventDefault();
     const file = e.target.files[0];
-    console.log("before");
 
     try {
-      console.log("after try");
       const addedFile = await ipfsClient.add(file);
       const ipfsUrl = `${dedicateEndPoint}/${addedFile.path}`;
       setUrlHash(ipfsUrl);
-      console.log("ipfsUrl:", ipfsUrl);
     } catch (e) {
       console.log(e);
     }
@@ -110,7 +107,6 @@ const createNfts = () => {
     try {
       const addedFile = await ipfsClient.add(data);
       const ipfsUrl = `${dedicateEndPoint}/${addedFile.path}`;
-      console.log("ipfsUrl:", ipfsUrl);
       createMarketForSale(ipfsUrl);
     } catch (e) {
       console.log(e);
@@ -157,8 +153,6 @@ const createNfts = () => {
 
         const tokenid = createTokenResult.events.Transfer.returnValues["2"];
 
-        console.log(tokenid);
-
         let marketFees = await deployedMarketContract.methods
           .gettheMarketFees()
           .call();
@@ -172,13 +166,13 @@ const createNfts = () => {
         router.push("/");
       } else {
         window.alert(
-          " UNlock Your Wallet Or Please install any provider wallet like MetaMask"
+          " Unlock Your Wallet Or Please install any provider wallet like MetaMask"
         );
 
         router.push("https://metamask.io/download.html");
       }
     } else {
-      window.alert("You are at Wrong Netweok, Connect with Roposten Please");
+      window.alert("You are at Wrong Netweok, Connect with Goerli Please");
     }
   };
 
@@ -264,7 +258,7 @@ const createNfts = () => {
           className="font-bold bg-yellow-500 mt-5 rounded p-4 text-white"
           onClick={createMarketItem}
         >
-          Submit Your NFT
+          Mint Your NFT
         </button>
       </div>
     </div>

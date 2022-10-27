@@ -4,7 +4,7 @@ import Link from "next/link";
 const NavBar = () => {
   return (
     <div>
-      <nav className="bg-gray-800">
+      <nav className="bg-gray-500">
         <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="relative flex items-center justify-between h-16">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -53,13 +53,8 @@ const NavBar = () => {
               <div className="logo flex-shrink-0 flex items-center">
                 <div className="flex-shrink-0 flex items-center">
                   <img
-                    className="block lg:hidden h-8 w-auto"
-                    src="https://ardapps.com/wp-content/uploads/2021/11/icon-2.png"
-                    alt="Workflow"
-                  />
-                  <img
                     className="hidden lg:block h-8 w-auto"
-                    src="https://ardapps.com/wp-content/uploads/2021/11/icon-2.png"
+                    src="https://unrealkingdoms.com/static/media/logo.bf60290e.png"
                     alt="Workflow"
                   />
                 </div>
@@ -94,7 +89,7 @@ const NavBar = () => {
                   </Link>
                   <Link href="/create-nfts">
                     <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                      Create NFT
+                      Mint NFT
                     </a>
                   </Link>
                 </div>
@@ -125,7 +120,7 @@ const NavBar = () => {
             </Link>
             <Link href="/create-nfts">
               <a className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-                Create NFT
+                Mint NFT
               </a>
             </Link>
           </div>

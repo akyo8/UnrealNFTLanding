@@ -93,19 +93,15 @@ const purchased = () => {
         );
         setMarketContract(deployedMarketContract);
 
-        console.log(account);
         //Fetch all unsold items
         const data = await deployedMarketContract.methods
           .getMyNFTPurchased()
           .call({ from: account });
-        console.log(data);
         const items = await Promise.all(
           data.map(async (item) => {
             const nftUrl = await deployedNftContract.methods
               .tokenURI(item.tokenId)
               .call();
-            console.log(nftUrl);
-            console.log(item);
             const priceToWei = Web3.utils.fromWei(
               item.price.toString(),
               "ether"
@@ -116,7 +112,6 @@ const purchased = () => {
             const replaceIPFsName = nftUrl
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
-            console.log("replaceIPFsName", replaceIPFsName);
             const metaData = await axios.get(replaceIPFsName);
 
             const oldImageUrl = metaData.data.image;
@@ -124,8 +119,6 @@ const purchased = () => {
               .toString()
               .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
 
-            console.log("metaData.data.image", metaData.data.image);
-            console.log("metaData.data.image", replaceIPFsImageName);
             //TODO: fix this object
             let myItem = {
               price: priceToWei,
@@ -136,7 +129,6 @@ const purchased = () => {
               name: metaData.data.name,
               description: metaData.data.description,
             };
-            console.log(item);
 
             return myItem;
           })
@@ -144,7 +136,7 @@ const purchased = () => {
 
         setpurchasedItems(items);
       } else {
-        window.alert("You are at Wrong Netweok, Connect with Roposten Please");
+        window.alert("You are at Wrong Netweok, Connect with Goerli Please");
       }
     };
     web3Api.web3 && LoadContracts();
@@ -159,8 +151,8 @@ const purchased = () => {
               <HeadAlert>
                 {{
                   account: account,
-                  createdNumber: "You Don`t Buy Any NFTs Yet",
-                  title: "OOOPS",
+                  createdNumber: "You Don't Buy Any NFTs Yet",
+                  title: "No NFTs",
                 }}
               </HeadAlert>
             </>
@@ -169,8 +161,8 @@ const purchased = () => {
               <HeadAlert>
                 {{
                   account: account,
-                  createdNumber: `You Purchased ${purchasedItems.length} NFTS`,
-                  title: "Good Job",
+                  createdNumber: `You Purchased ${purchasedItems.length} NFTs`,
+                  title: "Buy NFTs",
                 }}
               </HeadAlert>
 

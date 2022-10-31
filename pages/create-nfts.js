@@ -3,15 +3,16 @@ import { create } from "ipfs-http-client";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { useWeb3Context } from "../utils";
 
 //Cahneg THis projectId  with yours
 
-const projectId = "2DE7of6yoq13YKes8LJX0QK4W9p";
-//Cahneg THis projectSecret  with yours
-
-const projectSecret = "e5f7ff545c3f92a1f711fb3e3154dd1f";
 const auth =
-  "Basic " + Buffer.from(projectId + ":" + projectSecret).toString("base64");
+  "Basic " +
+  Buffer.from(process.env.projectId + ":" + process.env.projectSecret).toString(
+    "base64"
+  );
 const options = {
   host: "ipfs.infura.io",
   protocol: "https",
@@ -22,7 +23,6 @@ const options = {
   },
 };
 //Change THis dedicateEndPoint  with yours
-const dedicateEndPoint = "https://opensee.infura-ipfs.io/ipfs";
 const ipfsClient = create(options);
 
 const createNfts = () => {
@@ -39,6 +39,15 @@ const createNfts = () => {
     provider.on("accountsChanged", (_) => window.location.reload());
     provider.on("chainChanged", (_) => window.location.reload());
   };
+  const { isWhitelisted } = useWeb3Context();
+
+  useEffect(() => {
+    if (isWhitelisted) {
+      console.log("success");
+    } else {
+      window.location.href = "/";
+    }
+  }, []);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -73,6 +82,7 @@ const createNfts = () => {
   const [nftContract, setNFtContract] = useState(null);
   const [marketContract, setMarketContract] = useState(null);
   const [unsoldItems, setUnsoldItems] = useState([]);
+  const [tokenURI, setTokenURI] = useState("");
 
   const [urlHash, setUrlHash] = useState();
   const onChange = async (e) => {
@@ -81,7 +91,7 @@ const createNfts = () => {
 
     try {
       const addedFile = await ipfsClient.add(file);
-      const ipfsUrl = `${dedicateEndPoint}/${addedFile.path}`;
+      const ipfsUrl = `${process.env.dedicateEndPoint}/${addedFile.path}`;
       setUrlHash(ipfsUrl);
     } catch (e) {
       console.log(e);
@@ -106,7 +116,8 @@ const createNfts = () => {
 
     try {
       const addedFile = await ipfsClient.add(data);
-      const ipfsUrl = `${dedicateEndPoint}/${addedFile.path}`;
+      const ipfsUrl = `${process.env.dedicateEndPoint}/${addedFile.path}`;
+      setTokenURI(ipfsUrl);
       createMarketForSale(ipfsUrl);
     } catch (e) {
       console.log(e);
@@ -159,6 +170,29 @@ const createNfts = () => {
         marketFees = marketFees.toString();
 
         const priceToWei = Web3.utils.toWei(nftFormInput.price, "ether");
+        const { name, description } = nftFormInput;
+        const params = {
+          name: name,
+          description: description,
+          nftAddress: nftAddress,
+          tokenId: tokenid.toString(),
+          price: priceToWei.toString(),
+          marketFees: marketFees,
+          tokenURI: url,
+        };
+
+        axios
+          .post(process.env.endpoint + "updatenftinfo", params)
+          .then((res) => {
+            if (res.status === 200) {
+              console.log("success to add NFT item");
+            } else {
+              console.log(res.data.msg);
+            }
+          })
+          .catch((err) => {
+            console.log("error: ", err);
+          });
 
         const lanchTheNFtForSale = await deployedMarketContract.methods
           .createItemForSale(nftAddress, tokenid, priceToWei)

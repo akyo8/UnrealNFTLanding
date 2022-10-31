@@ -8,6 +8,7 @@ import MycardItem from "../components/MycardItem";
 import { useRouter } from "next/router";
 import HeadAccount from "../components/HeadAccount";
 import NewImageHead from "../components/NewImageHead";
+import { useWeb3Context } from "../utils";
 
 export default function Home() {
   const [web3Api, setWe3Api] = useState({
@@ -35,7 +36,7 @@ export default function Home() {
         });
       } else {
         window.alert(
-          " UNlock Your Wallet Or Please install any provider wallet like MetaMask"
+          " Unlock Your Wallet Or Please install any provider wallet like MetaMask"
         );
 
         router.push("https://metamask.io/download.html");
@@ -47,6 +48,7 @@ export default function Home() {
   //Create LoadAccounts Function
   const [account, setAccount] = useState(null);
   const [accountBalance, setAccountBalance] = useState(null);
+  const { setWhitelisted } = useWeb3Context();
 
   useEffect(() => {
     const loadAccount = async () => {
@@ -131,13 +133,13 @@ export default function Home() {
 
             const replaceIPFsName = nftUrl
               .toString()
-              .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
+              .replace("ipfs.infura.io", process.env.dedicateInfura);
             const metaData = await axios.get(replaceIPFsName);
 
             const oldImageUrl = metaData.data.image;
             const replaceIPFsImageName = oldImageUrl
               .toString()
-              .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
+              .replace("ipfs.infura.io", process.env.dedicateInfura);
 
             //TODO: fix this object
             let myItem = {
@@ -169,8 +171,60 @@ export default function Home() {
     const result = await marketContract.methods
       .createMarketForSale(nftAddress, convertIdtoInt)
       .send({ from: account, value: priceToWei });
-    router.reload();
+    // router.reload();
+
+    const {
+      blockHash,
+      blockNumber,
+      from,
+      to,
+      transactionHash,
+      transactionIndex,
+      type,
+    } = result;
+
+    const params = {
+      blockHash: blockHash,
+      blockNumber: blockNumber,
+      from: from,
+      to: to,
+      transactionHash: transactionHash,
+      transactionIndex: transactionIndex,
+      type: type,
+    };
+    axios
+      .post(process.env.endpoint + "addTransaction", params)
+      .then((res) => {
+        if (res.status === 200) {
+          router.reload();
+        } else {
+          console.log(res.data.msg);
+        }
+      })
+      .catch((err) => {
+        console.log("error");
+      });
   };
+  useEffect(() => {
+    localStorage.isAuthenticated = false;
+    if (account != null) {
+      const params = { wallet: account };
+
+      axios
+        .post(process.env.endpoint + "checkwhitelist", params)
+        .then((res) => {
+          if (res.status === 200) {
+            setWhitelisted(true);
+          } else {
+            console.log(res.data.msg);
+            setWhitelisted(false);
+          }
+        })
+        .catch((err) => {
+          setWhitelisted(false);
+        });
+    }
+  }, [account]);
 
   return (
     <div>

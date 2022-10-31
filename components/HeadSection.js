@@ -3,8 +3,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
+import router from "next/router";
 
 const HeadSection = () => {
+  const [account, setAccount] = useState("");
   const [web3Api, setWe3Api] = useState({
     provider: null,
     web3: null,
@@ -14,7 +16,6 @@ const HeadSection = () => {
     provider.on("accountsChanged", (_) => window.location.reload());
     provider.on("chainChanged", (_) => window.location.reload());
   };
-  const [account, setAccount] = useState(null);
   useEffect(() => {
     const loadProvider = async () => {
       const provider = await detectEthereumProvider();
@@ -82,11 +83,11 @@ const HeadSection = () => {
               <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                 <div className="sm:text-center lg:text-left">
                   <h1 className="text-4xl tracking-tight font-extrabold text-yellow-500 sm:text-5xl md:text-6xl">
-                    <span className="block lg:py-3 xl:inline">
+                    {/* <span className="block lg:py-3 xl:inline">
                       Mint Your NFTs{" "}
-                    </span>
+                    </span> */}
                     <span className="block dark:text-white xl:inline">
-                      Discover, Buy and Sell
+                      Discover, Buy and Sell NFTs
                     </span>
                   </h1>
 
@@ -105,11 +106,11 @@ const HeadSection = () => {
                         </button>
                       )}
 
-                      <Link href="/create-nfts">
+                      {/* <Link href="/create-nfts">
                         <a className="mt-4 w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-yellow-600 hover:bg-gray-700 md:py-4 md:text-lg md:px-10">
                           Mint Your NFT
                         </a>
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>

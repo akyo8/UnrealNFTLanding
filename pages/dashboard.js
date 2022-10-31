@@ -114,13 +114,13 @@ const dashboard = () => {
 
             const replaceIPFsName = nftUrl
               .toString()
-              .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
+              .replace("ipfs.infura.io", process.env.dedicateInfura);
             const metaData = await axios.get(replaceIPFsName);
 
             const oldImageUrl = metaData.data.image;
             const replaceIPFsImageName = oldImageUrl
               .toString()
-              .replace("ipfs.infura.io", "opensee.infura-ipfs.io");
+              .replace("ipfs.infura.io", process.env.dedicateInfura);
 
             //TODO: fix this object
             let myItem = {

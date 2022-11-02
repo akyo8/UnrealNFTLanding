@@ -206,7 +206,7 @@ const createNfts = () => {
         router.push("https://metamask.io/download.html");
       }
     } else {
-      window.alert("You are at Wrong Netweok, Connect with Goerli Please");
+      window.alert("You are at Wrong Netweok, Connect with ETH Mainnet Please");
     }
   };
 

@@ -142,7 +142,9 @@ const dashboard = () => {
         setSoldItems(mySoldItems);
         setcreathedItems(items);
       } else {
-        window.alert("You are at Wrong Netweok, Connect with Goerli Please");
+        window.alert(
+          "You are at Wrong Netweok, Connect with ETH Mainnet Please"
+        );
       }
     };
     web3Api.web3 && LoadContracts();
